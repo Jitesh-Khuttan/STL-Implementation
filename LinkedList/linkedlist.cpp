@@ -704,6 +704,7 @@ int main()
     LinkedList<float> floatList = LinkedList<float>();
     LinkedList<Name> nameList = LinkedList<Name>();
     LinkedList<string> stringList = LinkedList<string>();
+    LinkedList<int> newIntList = LinkedList<int>(6,200);
 
     intList.push_back(30);
     intList.push_back(10);
@@ -767,5 +768,21 @@ int main()
     {
         cout<<(*strit)->getData()<<" ";
     }
+
+    cout<<"\n\t";
+    for(intit = newIntList.Begin();intit != newIntList.End();++intit)
+        cout<<(*intit)->getData()<<" ";
+
+    intit = intList.Begin();
+    ++intit;
+    ++intit;
+
+    LinkedList<int> copyIntList = LinkedList<int>(intit,intList.End());
+    intit = copyIntList.Begin();
+    ++intit;
+    copyIntList.splice(intit,intList);
+    cout<<"\n\t";
+    for(intit = copyIntList.Begin();intit != copyIntList.End();++intit)
+        cout<<(*intit)->getData()<<" ";
 	return 0;
 }
