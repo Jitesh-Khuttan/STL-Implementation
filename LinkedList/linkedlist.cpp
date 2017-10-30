@@ -134,9 +134,14 @@ class LinkedList			//Implemented as Doubly Linked List
                     position = lst.getSize()-1;
                 }
             }
-			Node<Type>* operator*()
+			Type operator*()
 			{
-				return currentNode;
+				return currentNode->getData();
+			}
+
+			Node<Type>* operator&()
+			{
+			    return currentNode;
 			}
 			void operator++()
 			{
@@ -246,7 +251,7 @@ LinkedList<Type> :: LinkedList(Iterator first,Iterator last)
 	LinkedList<Type> :: Iterator it;
 	for(it=first;it!=last;++it)
 	{
-		push_back((*it)->getData());
+		push_back(*it);
 	}
 }
 
@@ -517,7 +522,7 @@ Type LinkedList<Type> :: getElementAtPosition(Iterator position)
 //			temp = temp->getNextNodeAddress();
 //		}
 		temp = head;
-		while(temp != *position)
+		while(temp != &position)
 			temp = temp->getNextNodeAddress();
 		return (temp->getData());
 	}
@@ -535,13 +540,13 @@ void LinkedList<Type> :: remove(Iterator position)
 		return;
 	}
 
-	if(*position == head)
+	if(&position == head)
 	{
 		pop_front();
 		return;
 	}
 
-	if(*position == end)
+	if(&position == end)
 	{
 		pop_back();
 		return;
@@ -555,7 +560,7 @@ void LinkedList<Type> :: remove(Iterator position)
 //		temp = temp->getNextNodeAddress();
 //		counter++;
 //	}
-	while(temp != *position)
+	while(temp != &position)
 	{
 		previous = temp;
 		temp = temp->getNextNodeAddress();
@@ -573,7 +578,7 @@ void LinkedList<Type> :: splice(Iterator position,LinkedList<Type>& lst)
 	LinkedList<Type> :: Iterator it;
 	for(it = lst.Begin();it != lst.End();++it)
 	{
-		insert((*it)->getData(),pos);
+		insert(*it,pos);
 		pos++;
 	}
 	lst.clear();	//Clearing the Source List
@@ -609,7 +614,7 @@ void LinkedList<Type> :: splice(Iterator position,LinkedList<Type>& lst,Iterator
 	//Inserting Elements in the destination List
 	for(it = first; it != last;++it)
 	{
-		insert((*it)->getData(),pos);
+		insert(*it,pos);
 		pos++;
 	}
 
@@ -631,23 +636,23 @@ void LinkedList<Type> :: sort( bool (*compare)(Type,Type) )
 	Type temp,compareValue;
 
 	//Selection Sort
-	for(out = this->Begin(); out != (*this->End())->getPreviousNodeAddress(); ++out)
+	for(out = this->Begin(); out != (&this->End())->getPreviousNodeAddress(); ++out)
 	{
 		//cout<<"\n\tOut";
-		compareValue = (*out)->getData();
+		compareValue = *out;
 		position = out;
 
-		for(in = Iterator((*out)->getNextNodeAddress()); in != End(); ++in )
+		for(in = Iterator((&out)->getNextNodeAddress()); in != End(); ++in )
 		{
-			if(compare((*in)->getData(),compareValue))
+			if(compare(*in,compareValue))
 			{
 				position = in;
-				compareValue = (*in)->getData();
+				compareValue = *in;
 			}
 		}
-		temp = (*out)->getData();
-		(*out)->setData(compareValue);
-		(*position)->setData(temp);
+		temp = *out;
+		(&out)->setData(compareValue);
+		(&position)->setData(temp);
 	}
 	//cout<<"\n\tSorted All Elements";
 }
@@ -719,13 +724,13 @@ int main()
     LinkedList<int> :: Iterator intit;
     for(intit = intList.Begin();intit != intList.End();++intit)
     {
-        cout<<(*intit)->getData() <<" ";
+        cout<<*intit <<" ";
     }
 
     cout<<"\n\tPrinting List using Backward Iterator:";
     for(intit = intList.crBegin();intit != intList.crEnd();++intit)
     {
-        cout<<(*intit)->getData() <<" ";
+        cout<<*intit <<" ";
     }
 
 
@@ -738,7 +743,7 @@ int main()
     LinkedList<float>:: Iterator floatit;
     for(floatit = floatList.Begin();floatit != floatList.End();++floatit)
     {
-        cout<<(*floatit)->getData()<<" ";
+        cout<<*floatit<<" ";
     }
 
     nameList.push_back(Name("Jitesh",1000));
@@ -751,7 +756,7 @@ int main()
     LinkedList<Name> :: Iterator nameit;
     for(nameit = nameList.Begin();nameit != nameList.End();++nameit)
     {
-        cout<<"\n\tName: "<<(*nameit)->getData().getName() <<" | Worth: "<<(*nameit)->getData().getWorth()<<endl;
+        cout<<"\n\tName: "<<(*nameit).getName() <<" | Worth: "<<(*nameit).getWorth()<<endl;
     }
 
     stringList.push_back("Jitesh");
@@ -766,12 +771,12 @@ int main()
     LinkedList<string> :: Iterator strit;
     for(strit = stringList.Begin();strit != stringList.End();++strit)
     {
-        cout<<(*strit)->getData()<<" ";
+        cout<<*strit<<" ";
     }
 
     cout<<"\n\t";
     for(intit = newIntList.Begin();intit != newIntList.End();++intit)
-        cout<<(*intit)->getData()<<" ";
+        cout<<*intit<<" ";
 
     intit = intList.Begin();
     ++intit;
@@ -783,6 +788,6 @@ int main()
     copyIntList.splice(intit,intList);
     cout<<"\n\t";
     for(intit = copyIntList.Begin();intit != copyIntList.End();++intit)
-        cout<<(*intit)->getData()<<" ";
+        cout<<*intit<<" ";
 	return 0;
 }
